@@ -1,0 +1,1741 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard — STACKLY</title>
+
+    <!-- ===== CDN: Tailwind + Bootstrap + Icons ===== -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+
+    <!-- ===== CDN: GSAP + AOS ===== -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- ===== Google Fonts ===== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ===== RESET & BASE ===== */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        overflow-x: hidden !important;
+        width: 100%;
+        height: 100%;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: #f1f4f9;
+        color: #0b192c;
+        overflow-x: hidden !important;
+        width: 100%;
+        max-width: 100vw;
+        min-height: 100vh;
+      }
+
+      /* ============================================================
+           SIDEBAR
+           ============================================================ */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 260px;
+        background: #0b192c;
+        z-index: 1050;
+        transform: translateX(-100%);
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 1.2rem 0 2rem;
+        box-shadow: 4px 0 24px rgba(11, 25, 44, 0.15);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar::-webkit-scrollbar {
+        width: 4px;
+      }
+      .sidebar::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+      }
+      .sidebar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 4px;
+      }
+
+      /* Sidebar Logo */
+      .sidebar-logo {
+        padding: 0 1.2rem 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        margin-bottom: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .sidebar-logo img {
+        height: 70px;
+        width: auto;
+        object-fit: contain;
+        filter: brightness(0) invert(1);
+      }
+
+      .sidebar-logo .logo-text {
+        color: #fff;
+        font-weight: 800;
+        font-size: 1.2rem;
+        letter-spacing: -0.02em;
+      }
+
+      .sidebar-logo .logo-text span {
+        color: #ff6b35;
+      }
+
+      /* Sidebar Nav */
+      .sidebar-nav {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .sidebar-nav li {
+        padding: 0 0.8rem;
+        margin-bottom: 0.2rem;
+      }
+
+      .sidebar-nav .nav-label {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: rgba(255, 255, 255, 0.25);
+        padding: 0.6rem 0.8rem 0.4rem;
+        font-weight: 600;
+      }
+
+      .sidebar-nav .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 0.7rem 0.9rem;
+        border-radius: 12px;
+        color: rgba(255, 255, 255, 0.55);
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.25s ease;
+        cursor: pointer;
+        border: none;
+        background: transparent;
+        width: 100%;
+        text-align: left;
+        text-decoration: none;
+      }
+
+      .sidebar-nav .nav-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+      }
+
+      .sidebar-nav .nav-item.active {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 107, 53, 0.18),
+          rgba(255, 107, 53, 0.06)
+        );
+        color: #ff6b35;
+        box-shadow: inset 3px 0 0 #ff6b35;
+      }
+
+      .sidebar-nav .nav-item i {
+        font-size: 1.2rem;
+        width: 24px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+
+      .sidebar-nav .nav-item .badge-count {
+        margin-left: auto;
+        background: #ff6b35;
+        color: #fff;
+        font-size: 0.65rem;
+        font-weight: 700;
+        padding: 0.15rem 0.6rem;
+        border-radius: 50px;
+      }
+
+      .sidebar-nav .nav-item.logout-item {
+        margin-top: 0.8rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        padding-top: 0.8rem;
+        color: rgba(255, 255, 255, 0.4);
+      }
+
+      .sidebar-nav .nav-item.logout-item:hover {
+        color: #ff6b35;
+        background: rgba(255, 107, 53, 0.08);
+      }
+
+      /* ============================================================
+           SIDEBAR OVERLAY
+           ============================================================ */
+      .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(11, 25, 44, 0.5);
+        z-index: 1040;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.35s ease;
+        backdrop-filter: blur(2px);
+      }
+
+      .sidebar-overlay.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      /* ============================================================
+           MAIN CONTENT
+           ============================================================ */
+      .main-content {
+        margin-left: 0;
+        padding: 0;
+        transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        min-height: 100vh;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      /* ============================================================
+           TOP BAR
+           ============================================================ */
+      .topbar {
+        background: #fff;
+        padding: 0.8rem 1.2rem;
+        border-bottom: 1px solid rgba(11, 25, 44, 0.04);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        min-height: 68px;
+        box-shadow: 0 2px 12px rgba(11, 25, 44, 0.03);
+      }
+
+      /* Mobile: Logo outside hamburger */
+      .topbar .brand-mobile {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+
+      .topbar .brand-mobile img {
+        height: 34px;
+        width: auto;
+        object-fit: contain;
+      }
+
+      .topbar .brand-mobile .brand-text {
+        font-weight: 800;
+        font-size: 1.05rem;
+        color: #0b192c;
+        letter-spacing: -0.02em;
+      }
+
+      .topbar .brand-mobile .brand-text span {
+        color: #ff6b35;
+      }
+
+      /* Hamburger */
+      .hamburger-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border: none;
+        background: transparent;
+        border-radius: 12px;
+        color: #0b192c;
+        font-size: 1.4rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+
+      .hamburger-btn:hover {
+        background: #f1f4f9;
+      }
+
+      /* Topbar right */
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        flex-shrink: 0;
+      }
+
+      .topbar-right .admin-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.3rem 0.8rem 0.3rem 0.5rem;
+        background: #f1f4f9;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #0b192c;
+      }
+
+      .topbar-right .admin-badge .avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #0b192c, #1a2f44);
+        color: #f7c948;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+
+      .topbar-right .icon-btn {
+        width: 40px;
+        height: 40px;
+        border: none;
+        background: transparent;
+        border-radius: 50%;
+        color: #4a5a6e;
+        font-size: 1.15rem;
+        transition: all 0.3s ease;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .topbar-right .icon-btn:hover {
+        background: #f1f4f9;
+        color: #0b192c;
+      }
+
+      .topbar-right .icon-btn .dot {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 8px;
+        height: 8px;
+        background: #ff6b35;
+        border-radius: 50%;
+        border: 2px solid #fff;
+      }
+
+      /* ============================================================
+           DASHBOARD CONTENT
+           ============================================================ */
+      .dashboard-content {
+        padding: 1.5rem 1.2rem 2rem;
+        overflow-x: hidden;
+        max-width: 100%;
+      }
+
+      /* ===== STATS CARDS ===== */
+      .stat-card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 1.5rem 1.2rem;
+        box-shadow: 0 2px 12px rgba(11, 25, 44, 0.04);
+        border: 1px solid rgba(11, 25, 44, 0.04);
+        transition: all 0.3s ease;
+        height: 100%;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 32px rgba(11, 25, 44, 0.08);
+      }
+
+      .stat-card .stat-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        font-size: 1.4rem;
+        margin-bottom: 0.8rem;
+      }
+
+      .stat-card .stat-icon.orange {
+        background: rgba(255, 107, 53, 0.1);
+        color: #ff6b35;
+      }
+      .stat-card .stat-icon.blue {
+        background: rgba(11, 25, 44, 0.08);
+        color: #0b192c;
+      }
+      .stat-card .stat-icon.green {
+        background: rgba(52, 199, 89, 0.1);
+        color: #34c759;
+      }
+      .stat-card .stat-icon.purple {
+        background: rgba(88, 86, 214, 0.1);
+        color: #5856d6;
+      }
+
+      .stat-card .stat-number {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #0b192c;
+        line-height: 1.2;
+      }
+
+      .stat-card .stat-label {
+        font-size: 0.85rem;
+        color: #4a5a6e;
+        font-weight: 500;
+      }
+
+      .stat-card .stat-change {
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.2rem;
+      }
+
+      .stat-card .stat-change.up {
+        color: #34c759;
+      }
+      .stat-card .stat-change.down {
+        color: #ff3b30;
+      }
+
+      /* ===== SECTION CARDS ===== */
+      .section-card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 1.5rem 1.2rem;
+        box-shadow: 0 2px 12px rgba(11, 25, 44, 0.04);
+        border: 1px solid rgba(11, 25, 44, 0.04);
+        overflow-x: hidden;
+        max-width: 100%;
+      }
+
+      .section-card .card-header-custom {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.8rem;
+        margin-bottom: 1.2rem;
+      }
+
+      .section-card .card-header-custom h5 {
+        font-weight: 700;
+        font-size: 1.05rem;
+        color: #0b192c;
+        margin: 0;
+      }
+
+      .section-card .card-header-custom .btn-sm-outline {
+        padding: 0.3rem 1.2rem;
+        border: 1.5px solid #e9edf2;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #4a5a6e;
+        background: transparent;
+        transition: all 0.3s ease;
+      }
+
+      .section-card .card-header-custom .btn-sm-outline:hover {
+        border-color: #ff6b35;
+        color: #ff6b35;
+      }
+
+      /* ===== TABLE ===== */
+      .table-custom {
+        font-size: 0.88rem;
+        width: 100%;
+      }
+
+      .table-custom th {
+        font-weight: 600;
+        color: #4a5a6e;
+        border-bottom: 1px solid #e9edf2;
+        padding: 0.7rem 0.5rem;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
+
+      .table-custom td {
+        padding: 0.7rem 0.5rem;
+        border-bottom: 1px solid #f1f4f9;
+        vertical-align: middle;
+      }
+
+      .table-custom .status-badge {
+        display: inline-block;
+        padding: 0.2rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .status-badge.confirmed {
+        background: rgba(52, 199, 89, 0.12);
+        color: #34c759;
+      }
+      .status-badge.pending {
+        background: rgba(255, 107, 53, 0.12);
+        color: #ff6b35;
+      }
+      .status-badge.cancelled {
+        background: rgba(255, 59, 48, 0.1);
+        color: #ff3b30;
+      }
+      .status-badge.completed {
+        background: rgba(88, 86, 214, 0.1);
+        color: #5856d6;
+      }
+
+      /* ===== CHART PLACEHOLDER ===== */
+      .chart-placeholder {
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 1.5rem;
+        text-align: center;
+        min-height: 180px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border: 1px dashed #e9edf2;
+        width: 100%;
+        overflow: hidden;
+      }
+
+      .chart-placeholder .bar-group {
+        display: flex;
+        align-items: flex-end;
+        gap: 0.6rem;
+        height: 100px;
+        margin-bottom: 0.8rem;
+        width: 100%;
+        justify-content: center;
+        max-width: 300px;
+      }
+
+      .chart-placeholder .bar {
+        width: 28px;
+        border-radius: 6px 6px 0 0;
+        background: linear-gradient(180deg, #ff6b35, #f7c948);
+        transition: height 0.6s ease;
+        min-height: 10px;
+        flex-shrink: 0;
+      }
+
+      .chart-placeholder .bar-label {
+        font-size: 0.6rem;
+        color: #6b7a8a;
+        font-weight: 500;
+      }
+
+      /* ============================================================
+           SIDEBAR SECTIONS (hidden by default, shown via JS)
+           ============================================================ */
+      .page-section {
+        display: none;
+        animation: fadeIn 0.4s ease;
+      }
+
+      .page-section.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+
+      /* DESKTOP: sidebar always visible */
+      @media (min-width: 992px) {
+        .sidebar {
+          transform: translateX(0) !important;
+        }
+
+        .sidebar-overlay {
+          display: none !important;
+        }
+
+        .main-content {
+          margin-left: 260px;
+          width: calc(100% - 260px);
+          max-width: calc(100% - 260px);
+        }
+
+        .hamburger-btn {
+          display: none !important;
+        }
+
+        .topbar .brand-mobile {
+          display: none !important;
+        }
+
+        .topbar {
+          padding: 0.8rem 2rem;
+        }
+
+        .dashboard-content {
+          padding: 2rem 2rem 2.5rem;
+        }
+
+        .section-card {
+          padding: 1.8rem 1.8rem;
+        }
+      }
+
+      /* TABLET & MOBILE: sidebar hidden by default, logo in topbar */
+      @media (max-width: 991.98px) {
+        .sidebar {
+          width: 280px;
+        }
+
+        .topbar .brand-desktop {
+          display: none !important;
+        }
+
+        .topbar .brand-mobile {
+          display: flex !important;
+        }
+
+        .topbar {
+          padding: 0.6rem 1rem;
+          min-height: 60px;
+        }
+
+        .dashboard-content {
+          padding: 1.2rem 1rem 1.5rem;
+        }
+
+        .stat-card .stat-number {
+          font-size: 1.5rem;
+        }
+
+        .section-card {
+          padding: 1.2rem 1rem;
+        }
+
+        .table-custom {
+          font-size: 0.8rem;
+        }
+        .table-custom th,
+        .table-custom td {
+          padding: 0.5rem 0.3rem;
+        }
+
+        .topbar-right .admin-badge .avatar-text {
+          display: none;
+        }
+        .topbar-right .admin-badge {
+          padding: 0.2rem 0.5rem 0.2rem 0.3rem;
+        }
+      }
+
+      @media (max-width: 575.98px) {
+        .topbar .brand-mobile img {
+          height: 80px;
+        }
+        .topbar .brand-mobile .brand-text {
+          font-size: 0.9rem;
+        }
+
+        .hamburger-btn {
+          width: 38px;
+          height: 38px;
+          font-size: 1.2rem;
+        }
+
+        .topbar-right .icon-btn {
+          width: 34px;
+          height: 34px;
+          font-size: 1rem;
+        }
+
+        .stat-card {
+          padding: 1rem 0.8rem;
+        }
+        .stat-card .stat-number {
+          font-size: 1.3rem;
+        }
+        .stat-card .stat-label {
+          font-size: 0.75rem;
+        }
+        .stat-card .stat-icon {
+          width: 40px;
+          height: 40px;
+          font-size: 1.1rem;
+        }
+
+        .dashboard-content {
+          padding: 1rem 0.75rem 1.2rem;
+        }
+
+        .section-card {
+          padding: 1rem 0.8rem;
+          border-radius: 16px;
+        }
+
+        .table-custom {
+          font-size: 0.72rem;
+        }
+        .table-custom th,
+        .table-custom td {
+          padding: 0.4rem 0.2rem;
+        }
+
+        .chart-placeholder .bar {
+          width: 20px;
+        }
+        .chart-placeholder .bar-group {
+          gap: 0.4rem;
+          height: 80px;
+        }
+      }
+
+      /* ===== AOS overrides ===== */
+      [data-aos] {
+        pointer-events: none;
+      }
+      [data-aos].aos-animate {
+        pointer-events: auto;
+      }
+
+      /* ===== Scrollable table wrapper ===== */
+      .table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
+      }
+
+      .table-wrap table {
+        min-width: 480px;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ============================================================
+    SIDEBAR OVERLAY
+    ============================================================ -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ============================================================
+    SIDEBAR
+    ============================================================ -->
+    <aside class="sidebar" id="sidebar">
+      <!-- Sidebar Logo -->
+      <div
+        class="sidebar-logo"
+        style="cursor: pointer"
+        onclick="window.location.href = 'admin.html'"
+      >
+        <img src="./assets/logo.webp" alt="STACKLY" id="sidebarLogo" />
+        <!-- <span class="logo-text">STACK<span>LY</span></span> -->
+      </div>
+
+      <!-- Sidebar Navigation -->
+      <ul class="sidebar-nav">
+        <li class="nav-label">Main</li>
+        <li>
+          <button class="nav-item active" data-section="dashboard">
+            <i class="bi bi-grid-fill"></i> Dashboard
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-section="users">
+            <i class="bi bi-people-fill"></i> Users
+            <span class="badge-count">12</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-section="trips">
+            <i class="bi bi-compass-fill"></i> Trips
+            <span class="badge-count">8</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-section="bookings">
+            <i class="bi bi-calendar-check-fill"></i> Bookings
+            <span class="badge-count">24</span>
+          </button>
+        </li>
+
+        <li class="nav-label" style="margin-top: 0.8rem">Content</li>
+        <li>
+          <button class="nav-item" data-section="destinations">
+            <i class="bi bi-geo-alt-fill"></i> Destinations
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-section="packages">
+            <i class="bi bi-box-fill"></i> Packages
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" data-section="blog">
+            <i class="bi bi-file-text-fill"></i> Blog
+          </button>
+        </li>
+
+        <li class="nav-label" style="margin-top: 0.8rem">Settings</li>
+        <li>
+          <button class="nav-item" data-section="settings">
+            <i class="bi bi-gear-fill"></i> Settings
+          </button>
+        </li>
+        <li>
+          <a href="login.html" class="nav-item logout-item">
+            <i class="bi bi-box-arrow-right"></i> Logout
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- ============================================================
+    MAIN CONTENT
+    ============================================================ -->
+    <main class="main-content" id="mainContent">
+      <!-- ===== TOP BAR ===== -->
+      <header class="topbar">
+        <!-- Left: Hamburger + Brand (mobile) -->
+        <div class="d-flex align-items-center gap-2">
+          <button
+            class="hamburger-btn"
+            id="hamburgerBtn"
+            aria-label="Toggle sidebar"
+          >
+            <i class="bi bi-list"></i>
+          </button>
+          <!-- Brand (mobile) -->
+          <div
+            class="brand-mobile"
+            style="cursor: pointer"
+            onclick="window.location.href = 'admin.html'"
+          >
+            <img src="./assets/logo.webp" alt="STACKLY" id="mobileLogo" />
+            <!-- <span class="brand-text">STACK<span>LY</span></span> -->
+          </div>
+        </div>
+
+        <!-- Brand (desktop) -->
+        <div class="brand-desktop">
+          <span
+            style="
+              font-weight: 700;
+              font-size: 1.1rem;
+              color: #0b192c;
+              letter-spacing: -0.02em;
+            "
+          >
+            Admin Panel
+          </span>
+        </div>
+
+        <!-- Right -->
+        <div class="topbar-right">
+          <button
+            class="icon-btn"
+            title="Notifications"
+            onclick="window.location.href = './404.html'"
+          >
+            <i class="bi bi-bell-fill"></i>
+            <span class="dot"></span>
+          </button>
+          <div
+            class="admin-badge"
+            onclick="window.location.href = './404.html'"
+          >
+            <span class="avatar">A</span>
+            <span class="avatar-text" id="adminNameDisplay">Admin</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- ===== DASHBOARD CONTENT ===== -->
+      <div class="dashboard-content">
+        <!-- ===== DASHBOARD SECTION ===== -->
+        <div class="page-section active" id="section-dashboard">
+          <!-- Welcome -->
+          <div class="mb-4" data-aos="fade-up" data-aos-duration="600">
+            <h2
+              style="
+                font-weight: 800;
+                font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+                color: #0b192c;
+                margin: 0;
+              "
+            >
+              Welcome back, <span id="dashboardAdminName">Admin</span> 👋
+            </h2>
+            <p style="color: #4a5a6e; margin: 0.2rem 0 0; font-size: 0.95rem">
+              Here's what's happening with your adventure platform today.
+            </p>
+          </div>
+
+          <!-- Stats -->
+          <div class="row g-3 g-md-4 mb-4">
+            <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+              <div class="stat-card">
+                <div class="stat-icon orange">
+                  <i class="bi bi-people-fill"></i>
+                </div>
+                <div class="stat-number">1,284</div>
+                <div class="stat-label">Total Users</div>
+                <span class="stat-change up"
+                  ><i class="bi bi-arrow-up"></i> 12%</span
+                >
+              </div>
+            </div>
+            <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="150">
+              <div class="stat-card">
+                <div class="stat-icon blue">
+                  <i class="bi bi-suitcase-fill"></i>
+                </div>
+                <div class="stat-number">342</div>
+                <div class="stat-label">Active Trips</div>
+                <span class="stat-change up"
+                  ><i class="bi bi-arrow-up"></i> 8%</span
+                >
+              </div>
+            </div>
+            <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+              <div class="stat-card">
+                <div class="stat-icon green">
+                  <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <div class="stat-number">89</div>
+                <div class="stat-label">Bookings Today</div>
+                <span class="stat-change up"
+                  ><i class="bi bi-arrow-up"></i> 23%</span
+                >
+              </div>
+            </div>
+            <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="250">
+              <div class="stat-card">
+                <div class="stat-icon purple">
+                  <i class="bi bi-star-fill"></i>
+                </div>
+                <div class="stat-number">4.9</div>
+                <div class="stat-label">Avg. Rating</div>
+                <span class="stat-change up"
+                  ><i class="bi bi-arrow-up"></i> 0.3</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Chart + Recent Bookings -->
+          <div class="row g-3 g-md-4">
+            <!-- Chart -->
+            <div
+              class="col-12 col-lg-6"
+              data-aos="fade-up"
+              data-aos-delay="300"
+            >
+              <div class="section-card">
+                <div class="card-header-custom">
+                  <h5>
+                    <i class="bi bi-graph-up me-2" style="color: #ff6b35"></i
+                    >Weekly Bookings
+                  </h5>
+                  <button class="btn-sm-outline">View All</button>
+                </div>
+                <div class="chart-placeholder">
+                  <div class="bar-group">
+                    <div
+                      style="
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                      "
+                    >
+                      <div class="bar" style="height: 70px"></div>
+                      <span class="bar-label">Mon</span>
+                    </div>
+                    <div
+                      style="
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                      "
+                    >
+                      <div class="bar" style="height: 50px"></div>
+                      <span class="bar-label">Tue</span>
+                    </div>
+                    <div
+                      style="
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                      "
+                    >
+                      <div class="bar" style="height: 90px"></div>
+                      <span class="bar-label">Wed</span>
+                    </div>
+                    <div
+                      style="
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                      "
+                    >
+                      <div class="bar" style="height: 65px"></div>
+                      <span class="bar-label">Thu</span>
+                    </div>
+                    <div
+                      style="
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                      "
+                    >
+                      <div class="bar" style="height: 110px"></div>
+                      <span class="bar-label">Fri</span>
+                    </div>
+                    <div
+                      style="
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                      "
+                    >
+                      <div class="bar" style="height: 80px"></div>
+                      <span class="bar-label">Sat</span>
+                    </div>
+                    <div
+                      style="
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                      "
+                    >
+                      <div class="bar" style="height: 45px"></div>
+                      <span class="bar-label">Sun</span>
+                    </div>
+                  </div>
+                  <p style="font-size: 0.75rem; color: #6b7a8a; margin: 0">
+                    Last 7 days
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Bookings -->
+            <div
+              class="col-12 col-lg-6"
+              data-aos="fade-up"
+              data-aos-delay="350"
+            >
+              <div class="section-card">
+                <div class="card-header-custom">
+                  <h5>
+                    <i
+                      class="bi bi-clock-history me-2"
+                      style="color: #ff6b35"
+                    ></i
+                    >Recent Bookings
+                  </h5>
+                  <button class="btn-sm-outline">View All</button>
+                </div>
+                <div class="table-wrap">
+                  <table class="table table-custom">
+                    <thead>
+                      <tr>
+                        <th>Guest</th>
+                        <th>Trip</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Sarah J.</strong></td>
+                        <td>Patagonia Trek</td>
+                        <td>
+                          <span class="status-badge confirmed">Confirmed</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><strong>Mike R.</strong></td>
+                        <td>Everest Base Camp</td>
+                        <td>
+                          <span class="status-badge pending">Pending</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><strong>Emma W.</strong></td>
+                        <td>Maasai Safari</td>
+                        <td>
+                          <span class="status-badge completed">Completed</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><strong>James K.</strong></td>
+                        <td>Ha Long Bay</td>
+                        <td>
+                          <span class="status-badge confirmed">Confirmed</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><strong>Lisa M.</strong></td>
+                        <td>Golden Circle</td>
+                        <td>
+                          <span class="status-badge cancelled">Cancelled</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== USERS SECTION ===== -->
+        <div class="page-section" id="section-users">
+          <div class="section-card">
+            <div class="card-header-custom">
+              <h5>
+                <i class="bi bi-people-fill me-2" style="color: #ff6b35"></i
+                >User Management
+              </h5>
+              <button class="btn-sm-outline">Add User</button>
+            </div>
+            <div class="table-wrap">
+              <table class="table table-custom">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Admin User</strong></td>
+                    <td>admin@stackly.com</td>
+                    <td><span class="status-badge confirmed">Admin</span></td>
+                    <td><span class="status-badge confirmed">Active</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Jessica D.</strong></td>
+                    <td>jessica@example.com</td>
+                    <td><span class="status-badge completed">User</span></td>
+                    <td><span class="status-badge confirmed">Active</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Mark R.</strong></td>
+                    <td>mark@example.com</td>
+                    <td><span class="status-badge completed">User</span></td>
+                    <td><span class="status-badge pending">Pending</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Anna L.</strong></td>
+                    <td>anna@example.com</td>
+                    <td><span class="status-badge completed">User</span></td>
+                    <td><span class="status-badge confirmed">Active</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== TRIPS SECTION ===== -->
+        <div class="page-section" id="section-trips">
+          <div class="section-card">
+            <div class="card-header-custom">
+              <h5>
+                <i class="bi bi-compass-fill me-2" style="color: #ff6b35"></i
+                >All Trips
+              </h5>
+              <button class="btn-sm-outline">Add Trip</button>
+            </div>
+            <div class="table-wrap">
+              <table class="table table-custom">
+                <thead>
+                  <tr>
+                    <th>Trip Name</th>
+                    <th>Destination</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Patagonia Trek</strong></td>
+                    <td>Chile</td>
+                    <td>$2,499</td>
+                    <td><span class="status-badge confirmed">Active</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Everest Base Camp</strong></td>
+                    <td>Nepal</td>
+                    <td>$3,899</td>
+                    <td><span class="status-badge confirmed">Active</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Maasai Safari</strong></td>
+                    <td>Kenya</td>
+                    <td>$4,299</td>
+                    <td><span class="status-badge pending">Upcoming</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Golden Circle</strong></td>
+                    <td>Iceland</td>
+                    <td>$1,899</td>
+                    <td>
+                      <span class="status-badge completed">Completed</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== BOOKINGS SECTION ===== -->
+        <div class="page-section" id="section-bookings">
+          <div class="section-card">
+            <div class="card-header-custom">
+              <h5>
+                <i
+                  class="bi bi-calendar-check-fill me-2"
+                  style="color: #ff6b35"
+                ></i
+                >All Bookings
+              </h5>
+              <button class="btn-sm-outline">Export</button>
+            </div>
+            <div class="table-wrap">
+              <table class="table table-custom">
+                <thead>
+                  <tr>
+                    <th>Booking ID</th>
+                    <th>Guest</th>
+                    <th>Trip</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>#BK-001</td>
+                    <td>Sarah J.</td>
+                    <td>Patagonia Trek</td>
+                    <td>Dec 15, 2026</td>
+                    <td>
+                      <span class="status-badge confirmed">Confirmed</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>#BK-002</td>
+                    <td>Mike R.</td>
+                    <td>Everest Base Camp</td>
+                    <td>Jan 22, 2027</td>
+                    <td><span class="status-badge pending">Pending</span></td>
+                  </tr>
+                  <tr>
+                    <td>#BK-003</td>
+                    <td>Emma W.</td>
+                    <td>Maasai Safari</td>
+                    <td>Feb 10, 2027</td>
+                    <td>
+                      <span class="status-badge completed">Completed</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>#BK-004</td>
+                    <td>James K.</td>
+                    <td>Ha Long Bay</td>
+                    <td>Mar 5, 2027</td>
+                    <td>
+                      <span class="status-badge confirmed">Confirmed</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>#BK-005</td>
+                    <td>Lisa M.</td>
+                    <td>Golden Circle</td>
+                    <td>Mar 18, 2027</td>
+                    <td>
+                      <span class="status-badge cancelled">Cancelled</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== DESTINATIONS SECTION ===== -->
+        <div class="page-section" id="section-destinations">
+          <div class="section-card">
+            <div class="card-header-custom">
+              <h5>
+                <i class="bi bi-geo-alt-fill me-2" style="color: #ff6b35"></i
+                >Destinations
+              </h5>
+              <button class="btn-sm-outline">Add Destination</button>
+            </div>
+            <p style="color: #4a5a6e; margin-bottom: 1rem">
+              Manage all destination listings.
+            </p>
+            <div class="row g-3">
+              <div class="col-12 col-sm-6 col-md-4">
+                <div
+                  class="p-3 rounded-3"
+                  style="
+                    background: #f8fafc;
+                    border: 1px solid #e9edf2;
+                    text-align: center;
+                  "
+                >
+                  <i
+                    class="bi bi-geo-alt-fill"
+                    style="font-size: 1.8rem; color: #ff6b35"
+                  ></i>
+                  <h6 style="font-weight: 700; margin: 0.3rem 0 0">
+                    Patagonia
+                  </h6>
+                  <p style="font-size: 0.8rem; color: #6b7a8a; margin: 0">
+                    Chile
+                  </p>
+                </div>
+              </div>
+              <div class="col-12 col-sm-6 col-md-4">
+                <div
+                  class="p-3 rounded-3"
+                  style="
+                    background: #f8fafc;
+                    border: 1px solid #e9edf2;
+                    text-align: center;
+                  "
+                >
+                  <i
+                    class="bi bi-geo-alt-fill"
+                    style="font-size: 1.8rem; color: #ff6b35"
+                  ></i>
+                  <h6 style="font-weight: 700; margin: 0.3rem 0 0">Everest</h6>
+                  <p style="font-size: 0.8rem; color: #6b7a8a; margin: 0">
+                    Nepal
+                  </p>
+                </div>
+              </div>
+              <div class="col-12 col-sm-6 col-md-4">
+                <div
+                  class="p-3 rounded-3"
+                  style="
+                    background: #f8fafc;
+                    border: 1px solid #e9edf2;
+                    text-align: center;
+                  "
+                >
+                  <i
+                    class="bi bi-geo-alt-fill"
+                    style="font-size: 1.8rem; color: #ff6b35"
+                  ></i>
+                  <h6 style="font-weight: 700; margin: 0.3rem 0 0">
+                    Maasai Mara
+                  </h6>
+                  <p style="font-size: 0.8rem; color: #6b7a8a; margin: 0">
+                    Kenya
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== PACKAGES SECTION ===== -->
+        <div class="page-section" id="section-packages">
+          <div class="section-card">
+            <div class="card-header-custom">
+              <h5>
+                <i class="bi bi-box-fill me-2" style="color: #ff6b35"></i
+                >Packages
+              </h5>
+              <button class="btn-sm-outline">Add Package</button>
+            </div>
+            <p style="color: #4a5a6e; margin-bottom: 1rem">
+              Manage tour packages and pricing.
+            </p>
+            <div class="table-wrap">
+              <table class="table table-custom">
+                <thead>
+                  <tr>
+                    <th>Package</th>
+                    <th>Duration</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Weekend Escape</strong></td>
+                    <td>2 Days</td>
+                    <td>$299</td>
+                    <td><span class="status-badge confirmed">Active</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Expedition Pro</strong></td>
+                    <td>7 Days</td>
+                    <td>$899</td>
+                    <td><span class="status-badge confirmed">Active</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Ultimate Safari</strong></td>
+                    <td>10 Days</td>
+                    <td>$2,499</td>
+                    <td><span class="status-badge confirmed">Active</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== BLOG SECTION ===== -->
+        <div class="page-section" id="section-blog">
+          <div class="section-card">
+            <div class="card-header-custom">
+              <h5>
+                <i class="bi bi-file-text-fill me-2" style="color: #ff6b35"></i
+                >Blog Posts
+              </h5>
+              <button class="btn-sm-outline">New Post</button>
+            </div>
+            <p style="color: #4a5a6e; margin-bottom: 1rem">
+              Manage blog content.
+            </p>
+            <div class="table-wrap">
+              <table class="table table-custom">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>10 Best Day Hikes in Patagonia</strong></td>
+                    <td>Hiking</td>
+                    <td>May 12, 2026</td>
+                    <td>
+                      <span class="status-badge confirmed">Published</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Mindful Travel Guide</strong></td>
+                    <td>Wellness</td>
+                    <td>May 5, 2026</td>
+                    <td>
+                      <span class="status-badge confirmed">Published</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Living with the Maasai</strong></td>
+                    <td>Culture</td>
+                    <td>Apr 28, 2026</td>
+                    <td><span class="status-badge pending">Draft</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== SETTINGS SECTION ===== -->
+        <div class="page-section" id="section-settings">
+          <div class="section-card">
+            <div class="card-header-custom">
+              <h5>
+                <i class="bi bi-gear-fill me-2" style="color: #ff6b35"></i
+                >Settings
+              </h5>
+            </div>
+            <p style="color: #4a5a6e; margin-bottom: 1.5rem">
+              Configure your platform settings.
+            </p>
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <div
+                  class="p-3 rounded-3"
+                  style="background: #f8fafc; border: 1px solid #e9edf2"
+                >
+                  <h6 style="font-weight: 700; font-size: 0.95rem">General</h6>
+                  <p style="font-size: 0.85rem; color: #4a5a6e; margin: 0">
+                    Site name, logo, favicon
+                  </p>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div
+                  class="p-3 rounded-3"
+                  style="background: #f8fafc; border: 1px solid #e9edf2"
+                >
+                  <h6 style="font-weight: 700; font-size: 0.95rem">Email</h6>
+                  <p style="font-size: 0.85rem; color: #4a5a6e; margin: 0">
+                    SMTP, notifications
+                  </p>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div
+                  class="p-3 rounded-3"
+                  style="background: #f8fafc; border: 1px solid #e9edf2"
+                >
+                  <h6 style="font-weight: 700; font-size: 0.95rem">Payments</h6>
+                  <p style="font-size: 0.85rem; color: #4a5a6e; margin: 0">
+                    Gateway, currency
+                  </p>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div
+                  class="p-3 rounded-3"
+                  style="background: #f8fafc; border: 1px solid #e9edf2"
+                >
+                  <h6 style="font-weight: 700; font-size: 0.95rem">Security</h6>
+                  <p style="font-size: 0.85rem; color: #4a5a6e; margin: 0">
+                    2FA, sessions
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ============================================================
+    SCRIPTS
+    ============================================================ -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // ============================================================
+        // SIDEBAR TOGGLE
+        // ============================================================
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("sidebarOverlay");
+        const hamburger = document.getElementById("hamburgerBtn");
+
+        function toggleSidebar() {
+          sidebar.classList.toggle("open");
+          overlay.classList.toggle("show");
+          document.body.style.overflow = sidebar.classList.contains("open")
+            ? "hidden"
+            : "";
+        }
+
+        hamburger.addEventListener("click", toggleSidebar);
+        overlay.addEventListener("click", toggleSidebar);
+
+        // Close on escape key
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && sidebar.classList.contains("open")) {
+            toggleSidebar();
+          }
+        });
+
+        // ============================================================
+        // SIDEBAR NAVIGATION - switch sections
+        // ============================================================
+        const navItems = document.querySelectorAll(
+          ".sidebar-nav .nav-item[data-section]",
+        );
+        const sections = document.querySelectorAll(".page-section");
+
+        navItems.forEach((item) => {
+          item.addEventListener("click", function () {
+            // Update active state
+            navItems.forEach((n) => n.classList.remove("active"));
+            this.classList.add("active");
+
+            // Show corresponding section
+            const target = this.getAttribute("data-section");
+            sections.forEach((sec) => sec.classList.remove("active"));
+            const targetSection = document.getElementById("section-" + target);
+            if (targetSection) {
+              targetSection.classList.add("active");
+            }
+
+            // Close sidebar on mobile
+            if (window.innerWidth < 992) {
+              toggleSidebar();
+            }
+          });
+        });
+
+        // ============================================================
+        // LOAD ADMIN NAME FROM LOCAL STORAGE
+        // ============================================================
+        const storedName = localStorage.getItem("stackly_user_name");
+        const storedEmail = localStorage.getItem("stackly_user_email");
+        const storedRole = localStorage.getItem("stackly_user_role");
+
+        // If no admin logged in, redirect to login
+        if (storedRole !== "admin" && storedEmail) {
+          alert("Access denied. Admin only.");
+          window.location.href = "login.html";
+        } else if (!storedEmail) {
+          // Redirect to login if no user data
+          window.location.href = "login.html";
+        }
+
+        // Display admin name
+        const nameDisplay = document.getElementById("adminNameDisplay");
+        const dashName = document.getElementById("dashboardAdminName");
+        if (storedName) {
+          nameDisplay.textContent = storedName;
+          dashName.textContent = storedName;
+        } else if (storedEmail) {
+          const emailName = storedEmail.split("@")[0];
+          nameDisplay.textContent = emailName;
+          dashName.textContent = emailName;
+        }
+
+        // ============================================================
+        // HAMBURGER ICON TOGGLE (open/close icon)
+        // ============================================================
+        const hamburgerIcon = hamburger.querySelector("i");
+        hamburger.addEventListener("click", function () {
+          if (sidebar.classList.contains("open")) {
+            hamburgerIcon.className = "bi bi-x-lg";
+          } else {
+            hamburgerIcon.className = "bi bi-list";
+          }
+        });
+
+        // Reset icon when sidebar closes via overlay
+        overlay.addEventListener("click", function () {
+          if (!sidebar.classList.contains("open")) {
+            hamburgerIcon.className = "bi bi-list";
+          }
+        });
+
+        // ============================================================
+        // AOS INIT
+        // ============================================================
+        AOS.init({
+          duration: 600,
+          easing: "ease-out-cubic",
+          once: true,
+          offset: 20,
+          disable: window.innerWidth < 576 ? true : false,
+        });
+
+        // ============================================================
+        // HANDLE ALL NON-NAV CTAs → ./404.html
+        // ============================================================
+        document
+          .querySelectorAll(
+            'a[href]:not([href="login.html"]):not([href="index.html"]):not([href^="#"]):not([href^="javascript:"])',
+          )
+          .forEach((el) => {
+            if (
+              el.getAttribute("href") !== "login.html" &&
+              el.getAttribute("href") !== "index.html"
+            ) {
+              el.addEventListener("click", function (e) {
+                e.preventDefault();
+                window.location.href = "./404.html";
+              });
+            }
+          });
+
+        // Buttons that are not nav items or hamburger
+        document
+          .querySelectorAll(
+            "button:not(.nav-item):not(.hamburger-btn):not(.role-btn)",
+          )
+          .forEach((el) => {
+            if (!el.closest(".sidebar-nav") && !el.closest(".topbar")) {
+              el.addEventListener("click", function (e) {
+                // Don't redirect if it's a section switcher
+                if (!this.hasAttribute("data-section")) {
+                  e.preventDefault();
+                  window.location.href = "./404.html";
+                }
+              });
+            }
+          });
+
+        // ============================================================
+        // ENSURE NO HORIZONTAL SCROLL
+        // ============================================================
+        window.addEventListener("resize", function () {
+          if (document.documentElement.scrollWidth > window.innerWidth) {
+            document.body.style.overflowX = "hidden";
+          }
+        });
+
+        // ============================================================
+        // SIDEBAR LOGO PLACEHOLDER - You can replace src with actual logo
+        // ============================================================
+        // The logo images use placeholder URLs. Replace with your actual logo.
+        // For example:
+        // document.getElementById('sidebarLogo').src = 'your-logo.png';
+        // document.getElementById('mobileLogo').src = 'your-logo-mobile.png';
+      });
+    </script>
+  </body>
+</html>

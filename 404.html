@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 — Page Not Found | STACKLY</title>
+
+    <!-- ===== CDN: Tailwind + Bootstrap + Icons ===== -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+
+    <!-- ===== CDN: GSAP + AOS ===== -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- ===== Google Fonts ===== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ===== RESET & BASE ===== */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        overflow-x: hidden !important;
+        width: 100%;
+        height: 100%;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: #f8fafc;
+        color: #0b192c;
+        overflow-x: hidden !important;
+        width: 100%;
+        max-width: 100vw;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      img,
+      iframe,
+      video,
+      svg {
+        max-width: 100%;
+        display: block;
+      }
+
+      a,
+      button,
+      .btn {
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+      }
+
+      /* ===== 404 PAGE WRAPPER ===== */
+      .error-wrapper {
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1.5rem;
+        background: linear-gradient(145deg, #f8fafc 0%, #eef2f6 100%);
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Decorative background elements */
+      .error-wrapper::before {
+        content: "404";
+        position: absolute;
+        font-size: clamp(12rem, 30vw, 32rem);
+        font-weight: 900;
+        color: rgba(11, 25, 44, 0.04);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 0;
+        letter-spacing: -0.08em;
+        pointer-events: none;
+        user-select: none;
+        font-family: "Inter", sans-serif;
+      }
+
+      .error-wrapper .floating-icon {
+        position: absolute;
+        font-size: 3rem;
+        color: rgba(255, 107, 53, 0.08);
+        z-index: 0;
+        pointer-events: none;
+        animation: float 8s ease-in-out infinite alternate;
+      }
+
+      .error-wrapper .floating-icon:nth-child(1) {
+        top: 10%;
+        left: 5%;
+        font-size: 4rem;
+        animation-delay: 0s;
+      }
+      .error-wrapper .floating-icon:nth-child(2) {
+        bottom: 15%;
+        right: 5%;
+        font-size: 3.5rem;
+        animation-delay: 2s;
+      }
+      .error-wrapper .floating-icon:nth-child(3) {
+        top: 25%;
+        right: 12%;
+        font-size: 2.5rem;
+        animation-delay: 4s;
+      }
+      .error-wrapper .floating-icon:nth-child(4) {
+        bottom: 30%;
+        left: 8%;
+        font-size: 3rem;
+        animation-delay: 1.5s;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(0px) rotate(0deg);
+        }
+        100% {
+          transform: translateY(-20px) rotate(5deg);
+        }
+      }
+
+      /* ===== ERROR CONTENT ===== */
+      .error-content {
+        position: relative;
+        z-index: 1;
+        max-width: 560px;
+        width: 100%;
+        text-align: center;
+        padding: 2rem 1.5rem;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        border-radius: 32px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow:
+          0 24px 64px rgba(11, 25, 44, 0.06),
+          0 4px 16px rgba(11, 25, 44, 0.04);
+      }
+
+      .error-content .error-number {
+        font-size: clamp(4rem, 14vw, 8rem);
+        font-weight: 900;
+        line-height: 1;
+        background: linear-gradient(135deg, #0b192c, #1a2f44);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.04em;
+        margin-bottom: 0.2rem;
+      }
+
+      .error-content .error-number .accent {
+        background: linear-gradient(135deg, #ff6b35, #f7c948);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .error-content .error-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 107, 53, 0.1),
+          rgba(247, 201, 72, 0.1)
+        );
+        font-size: 2.2rem;
+        color: #ff6b35;
+        margin-bottom: 1rem;
+      }
+
+      .error-content h2 {
+        font-size: clamp(1.4rem, 3vw, 2rem);
+        font-weight: 700;
+        color: #0b192c;
+        margin-bottom: 0.6rem;
+        letter-spacing: -0.02em;
+      }
+
+      .error-content p {
+        font-size: 1rem;
+        color: #4a5a6e;
+        line-height: 1.7;
+        max-width: 400px;
+        margin: 0 auto 2rem;
+      }
+
+      /* ===== BUTTONS ===== */
+      .btn-group-error {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .btn-error-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        background: linear-gradient(135deg, #ff6b35, #e85d2c);
+        color: #fff;
+        font-weight: 700;
+        font-size: 1rem;
+        padding: 0.85rem 2.2rem;
+        border-radius: 50px;
+        border: none;
+        box-shadow: 0 6px 24px rgba(255, 107, 53, 0.3);
+        transition: all 0.3s ease;
+      }
+
+      .btn-error-primary:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 12px 40px rgba(255, 107, 53, 0.45);
+        color: #fff;
+      }
+
+      .btn-error-primary i {
+        font-size: 1.1rem;
+        transition: transform 0.3s ease;
+      }
+
+      .btn-error-primary:hover i {
+        transform: translateX(4px);
+      }
+
+      .btn-error-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        background: transparent;
+        color: #0b192c;
+        font-weight: 600;
+        font-size: 1rem;
+        padding: 0.85rem 2rem;
+        border-radius: 50px;
+        border: 2px solid #d1d9e0;
+        transition: all 0.3s ease;
+      }
+
+      .btn-error-secondary:hover {
+        background: #0b192c;
+        color: #fff;
+        border-color: #0b192c;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(11, 25, 44, 0.12);
+      }
+
+      .btn-error-secondary i {
+        font-size: 1.1rem;
+        transition: transform 0.3s ease;
+      }
+
+      .btn-error-secondary:hover i {
+        transform: translateX(-4px);
+      }
+
+      /* ===== RESPONSIVE ===== */
+      @media (max-width: 767.98px) {
+        .error-wrapper {
+          padding: 1.5rem 1rem;
+          min-height: 100vh;
+        }
+
+        .error-content {
+          padding: 1.8rem 1.2rem;
+          border-radius: 24px;
+        }
+
+        .error-content .error-number {
+          font-size: clamp(3.2rem, 12vw, 5rem);
+        }
+
+        .error-content .error-icon {
+          width: 60px;
+          height: 60px;
+          font-size: 1.8rem;
+        }
+
+        .error-content h2 {
+          font-size: 1.3rem;
+        }
+
+        .error-content p {
+          font-size: 0.92rem;
+          margin-bottom: 1.6rem;
+        }
+
+        .btn-group-error {
+          flex-direction: column;
+          width: 100%;
+        }
+
+        .btn-error-primary,
+        .btn-error-secondary {
+          width: 100%;
+          justify-content: center;
+          padding: 0.8rem 1.5rem;
+          font-size: 0.95rem;
+        }
+
+        .error-wrapper .floating-icon {
+          font-size: 2rem !important;
+        }
+        .error-wrapper .floating-icon:nth-child(1) {
+          font-size: 2.5rem !important;
+        }
+        .error-wrapper .floating-icon:nth-child(2) {
+          font-size: 2rem !important;
+        }
+        .error-wrapper .floating-icon:nth-child(3) {
+          font-size: 1.8rem !important;
+        }
+        .error-wrapper .floating-icon:nth-child(4) {
+          font-size: 2.2rem !important;
+        }
+      }
+
+      @media (max-width: 575.98px) {
+        .error-wrapper {
+          padding: 1rem 0.75rem;
+        }
+
+        .error-content {
+          padding: 1.5rem 1rem;
+          border-radius: 20px;
+        }
+
+        .error-content .error-number {
+          font-size: clamp(2.8rem, 10vw, 4rem);
+        }
+
+        .error-content .error-icon {
+          width: 50px;
+          height: 50px;
+          font-size: 1.5rem;
+        }
+
+        .error-content h2 {
+          font-size: 1.1rem;
+        }
+
+        .error-content p {
+          font-size: 0.85rem;
+          margin-bottom: 1.4rem;
+        }
+
+        .btn-error-primary,
+        .btn-error-secondary {
+          font-size: 0.88rem;
+          padding: 0.7rem 1.2rem;
+        }
+
+        .error-wrapper .floating-icon {
+          display: none;
+        }
+      }
+
+      @media (min-width: 768px) {
+        .btn-group-error {
+          flex-wrap: wrap;
+        }
+
+        .btn-error-primary,
+        .btn-error-secondary {
+          min-width: 180px;
+        }
+      }
+
+      @media (min-width: 992px) {
+        .error-content {
+          padding: 3rem 3rem;
+          border-radius: 40px;
+        }
+      }
+
+      /* ===== AOS overrides ===== */
+      [data-aos] {
+        pointer-events: none;
+      }
+      [data-aos].aos-animate {
+        pointer-events: auto;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ============================================================
+    404 ERROR PAGE
+    ============================================================ -->
+    <div class="error-wrapper">
+      <!-- Decorative Floating Icons -->
+      <span class="floating-icon"><i class="bi bi-compass-fill"></i></span>
+      <span class="floating-icon"><i class="bi bi-tree-fill"></i></span>
+      <span class="floating-icon"><i class="bi bi-mountain-fill"></i></span>
+      <span class="floating-icon"><i class="bi bi-binoculars-fill"></i></span>
+
+      <!-- Main Content -->
+      <div
+        class="error-content"
+        data-aos="fade-up"
+        data-aos-duration="800"
+        data-aos-delay="100"
+      >
+        <!-- Error Icon -->
+        <div
+          class="error-icon"
+          data-aos="zoom-in"
+          data-aos-duration="600"
+          data-aos-delay="200"
+        >
+          <i class="bi bi-compass"></i>
+        </div>
+
+        <!-- Error Number -->
+        <div
+          class="error-number"
+          data-aos="fade-up"
+          data-aos-duration="700"
+          data-aos-delay="150"
+        >
+          4<span class="accent">0</span>4
+        </div>
+
+        <!-- Heading -->
+        <h2 data-aos="fade-up" data-aos-duration="700" data-aos-delay="200">
+          Looks like you're off the trail!
+        </h2>
+
+        <!-- Description -->
+        <p data-aos="fade-up" data-aos-duration="700" data-aos-delay="250">
+          The page you're looking for seems to have wandered into the wild.
+          Don't worry — we'll help you find your way back.
+        </p>
+
+        <!-- Buttons -->
+        <div
+          class="btn-group-error"
+          data-aos="fade-up"
+          data-aos-duration="700"
+          data-aos-delay="300"
+        >
+          <!-- GO BACK Button -->
+          <button class="btn-error-secondary" id="goBackBtn">
+            <i class="bi bi-arrow-left"></i> GO BACK
+          </button>
+
+          <!-- GO TO HOME Button -->
+          <a href="index.html" class="btn-error-primary">
+            GO TO HOME <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+
+        <!-- Small helper text -->
+        <p
+          class="mt-4 mb-0"
+          style="font-size: 0.75rem; color: #9aabb8; max-width: 100%"
+          data-aos="fade-up"
+          data-aos-delay="350"
+        >
+          <i class="bi bi-question-circle me-1"></i>
+          Need help?
+          <a
+            href="./contact.html"
+            style="color: #ff6b35; font-weight: 600; text-decoration: none"
+            >Contact support</a
+          >
+        </p>
+      </div>
+    </div>
+
+    <!-- ============================================================
+    SCRIPTS
+    ============================================================ -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // ===== GSAP Entrance Animation =====
+        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+        tl.fromTo(
+          ".error-content",
+          { opacity: 0, y: 40, scale: 0.96 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.9 },
+        )
+          .fromTo(
+            ".error-content .error-icon",
+            { opacity: 0, scale: 0.6 },
+            { opacity: 1, scale: 1, duration: 0.6 },
+            "-=0.5",
+          )
+          .fromTo(
+            ".error-content .error-number",
+            { opacity: 0, y: 20 },
+            { opacity: 1, y: 0, duration: 0.7 },
+            "-=0.4",
+          )
+          .fromTo(
+            ".error-content h2",
+            { opacity: 0, y: 15 },
+            { opacity: 1, y: 0, duration: 0.6 },
+            "-=0.4",
+          )
+          .fromTo(
+            ".error-content p",
+            { opacity: 0, y: 15 },
+            { opacity: 1, y: 0, duration: 0.6 },
+            "-=0.3",
+          )
+          .fromTo(
+            ".btn-group-error",
+            { opacity: 0, y: 15 },
+            { opacity: 1, y: 0, duration: 0.6 },
+            "-=0.3",
+          )
+          .fromTo(
+            ".error-content .mt-4",
+            { opacity: 0 },
+            { opacity: 1, duration: 0.4 },
+            "-=0.2",
+          );
+
+        // ===== GO BACK functionality =====
+        const goBackBtn = document.getElementById("goBackBtn");
+
+        goBackBtn.addEventListener("click", function (e) {
+          // Check if there's a previous page in history
+          if (window.history.length > 1) {
+            window.history.back();
+          } else {
+            // If no history, redirect to home
+            window.location.href = "index.html";
+          }
+        });
+
+        // ===== AOS Init (fallback for any AOS elements) =====
+        AOS.init({
+          duration: 700,
+          easing: "ease-out-cubic",
+          once: true,
+          offset: 20,
+          disable: window.innerWidth < 576 ? true : false,
+        });
+
+        // ===== Ensure no horizontal scroll =====
+        window.addEventListener("resize", function () {
+          if (document.documentElement.scrollWidth > window.innerWidth) {
+            document.body.style.overflowX = "hidden";
+          }
+        });
+
+        // ===== Handle any stray CTA clicks (just in case) =====
+        // document
+        //   .querySelectorAll(
+        //     'a[href]:not([href="index.html"]):not([href^="#"]):not([href^="javascript:"])',
+        //   )
+        //   .forEach((el) => {
+        //     // Only catch if it's not the home link
+        //     if (el.getAttribute("href") !== "index.html") {
+        //       el.addEventListener("click", function (e) {
+        //         e.preventDefault();
+        //         window.location.href = "./404.html";
+        //       });
+        //     }
+        //   });
+      });
+    </script>
+  </body>
+</html>

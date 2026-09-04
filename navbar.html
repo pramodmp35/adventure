@@ -1,0 +1,1099 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Navbar Design</title>
+
+    <!-- ===== TAILWIND CSS CDN ===== -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- ===== BOOTSTRAP 5 CDN (CSS) ===== -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- ===== AOS (Animate On Scroll) CDN ===== -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+    <!-- ===== FONT AWESOME ICONS ===== -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <!-- ===== GOOGLE FONTS ===== -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ===== CUSTOM VARIABLES ===== */
+      :root {
+        --navy: #1b2a4a;
+        --navy-dark: #0f1a30;
+        --navy-light: #2a3d66;
+        --orange: #ff6b35;
+        --orange-light: #ff8c5a;
+        --orange-dark: #e55a2b;
+        --orange-glow: rgba(255, 107, 53, 0.25);
+        --white: #ffffff;
+        --gray-light: #f8f9fa;
+      }
+
+      /* ===== RESET & BASE ===== */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--gray-light);
+        min-height: 100vh;
+      }
+
+      /* ===== NAVBAR STYLES ===== */
+      .custom-navbar {
+        background: var(--navy);
+        padding: 0.75rem 1.5rem;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        box-shadow: 0 4px 30px rgba(27, 42, 74, 0.3);
+        border-bottom: 2px solid var(--orange);
+        transition: all 0.3s ease;
+      }
+
+      .custom-navbar .navbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+        color: var(--white);
+        font-weight: 700;
+        font-size: 1.35rem;
+        letter-spacing: -0.5px;
+      }
+
+      .custom-navbar .navbar-brand .brand-text span {
+        color: var(--orange);
+      }
+
+      /* ----- LOGO IMAGE ----- */
+      .logo-img {
+        height: 80px;
+        width: auto;
+        object-fit: contain;
+        filter: brightness(0) invert(1);
+        transition: transform 0.3s ease;
+      }
+
+      .logo-img:hover {
+        transform: scale(1.05) rotate(-2deg);
+      }
+
+      /* ----- NAV LINKS (DESKTOP) ----- */
+      .navbar-nav .nav-link {
+        color: rgba(255, 255, 255, 0.8) !important;
+        font-weight: 500;
+        font-size: 0.95rem;
+        padding: 0.5rem 1rem !important;
+        position: relative;
+        transition:
+          color 0.3s ease,
+          transform 0.3s ease;
+        letter-spacing: 0.3px;
+      }
+
+      .navbar-nav .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2.5px;
+        background: var(--orange);
+        border-radius: 10px;
+        transform: translateX(-50%);
+        transition: width 0.3s ease;
+      }
+
+      .navbar-nav .nav-link:hover {
+        color: var(--white) !important;
+        transform: translateY(-1px);
+      }
+
+      .navbar-nav .nav-link:hover::after {
+        width: 60%;
+      }
+
+      .navbar-nav .nav-link.active {
+        color: var(--white) !important;
+      }
+
+      .navbar-nav .nav-link.active::after {
+        width: 60%;
+      }
+
+      /* ----- LOGIN BUTTON (DESKTOP) ----- */
+      .btn-login {
+        background: var(--orange);
+        color: var(--white) !important;
+        font-weight: 600;
+        font-size: 0.9rem;
+        padding: 0.55rem 1.8rem;
+        border-radius: 50px;
+        border: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px var(--orange-glow);
+        letter-spacing: 0.3px;
+      }
+
+      .btn-login:hover {
+        background: var(--orange-dark);
+        transform: translateY(-2px) scale(1.03);
+        box-shadow: 0 8px 30px var(--orange-glow);
+      }
+
+      .btn-login i {
+        margin-right: 0.5rem;
+      }
+
+      /* ----- HAMBURGER TOGGLE (CUSTOM) ----- */
+      .custom-toggler {
+        border: none;
+        background: transparent;
+        padding: 0.5rem;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        width: 40px;
+        height: 40px;
+        justify-content: center;
+        align-items: center;
+        border-radius: 8px;
+        transition: background 0.3s ease;
+      }
+
+      .custom-toggler:hover {
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .custom-toggler .bar {
+        display: block;
+        width: 28px;
+        height: 2.5px;
+        background: var(--white);
+        border-radius: 10px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transform-origin: center;
+      }
+
+      .custom-toggler .bar:nth-child(1) {
+        width: 28px;
+      }
+      .custom-toggler .bar:nth-child(2) {
+        width: 22px;
+      }
+      .custom-toggler .bar:nth-child(3) {
+        width: 26px;
+      }
+
+      .custom-toggler.active .bar:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+        width: 28px;
+      }
+      .custom-toggler.active .bar:nth-child(2) {
+        opacity: 0;
+        transform: scaleX(0);
+      }
+      .custom-toggler.active .bar:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+        width: 28px;
+      }
+
+      /* ===== FULL-SCREEN OVERLAY MENU ===== */
+      .nav-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: var(--navy-dark);
+        z-index: 9998;
+        display: flex;
+        align-items: stretch;
+        justify-content: flex-start;
+        opacity: 0;
+        pointer-events: none;
+        visibility: hidden;
+        transition:
+          opacity 0.4s ease,
+          visibility 0.4s ease;
+        overflow-y: auto;
+      }
+
+      .nav-overlay.open {
+        opacity: 1;
+        pointer-events: all;
+        visibility: visible;
+      }
+
+      /* Overlay inner — content on the LEFT side */
+      .nav-overlay-inner {
+        width: 100%;
+        max-width: 420px;
+        min-height: 100vh;
+        background: var(--navy);
+        padding: 2rem 2.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        box-shadow: 4px 0 60px rgba(0, 0, 0, 0.5);
+        transform: translateX(-100%);
+        transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+
+      .nav-overlay.open .nav-overlay-inner {
+        transform: translateX(0);
+      }
+
+      /* Close button inside overlay */
+      .overlay-close-btn {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        background: rgba(255, 255, 255, 0.06);
+        border: none;
+        color: var(--white);
+        font-size: 1.6rem;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .overlay-close-btn:hover {
+        background: rgba(255, 107, 53, 0.2);
+        transform: rotate(90deg);
+        border-color: var(--orange);
+      }
+
+      /* Overlay logo */
+      .overlay-logo {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 3.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .overlay-logo .logo-img-sm {
+        height: 38px;
+        width: auto;
+        object-fit: contain;
+        filter: brightness(0) invert(1);
+      }
+
+      .overlay-logo .brand-text {
+        color: var(--white);
+        font-weight: 700;
+        font-size: 1.3rem;
+        letter-spacing: -0.5px;
+      }
+
+      .overlay-logo .brand-text span {
+        color: var(--orange);
+      }
+
+      /* Overlay nav links — left aligned */
+      .overlay-nav-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      .overlay-nav-list li {
+        opacity: 0;
+        transform: translateX(-30px);
+        transition: all 0.4s ease;
+      }
+
+      .nav-overlay.open .overlay-nav-list li {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .overlay-nav-list li:nth-child(1) {
+        transition-delay: 0.08s;
+      }
+      .overlay-nav-list li:nth-child(2) {
+        transition-delay: 0.14s;
+      }
+      .overlay-nav-list li:nth-child(3) {
+        transition-delay: 0.2s;
+      }
+      .overlay-nav-list li:nth-child(4) {
+        transition-delay: 0.26s;
+      }
+      .overlay-nav-list li:nth-child(5) {
+        transition-delay: 0.32s;
+      }
+      .overlay-nav-list li:nth-child(6) {
+        transition-delay: 0.38s;
+      }
+
+      .overlay-nav-list .nav-link-overlay {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 1.3rem;
+        padding: 0.75rem 0.5rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        letter-spacing: 0.3px;
+        position: relative;
+      }
+
+      .overlay-nav-list .nav-link-overlay i {
+        width: 28px;
+        font-size: 1.1rem;
+        color: var(--orange);
+        opacity: 0.6;
+        transition: opacity 0.3s ease;
+      }
+
+      .overlay-nav-list .nav-link-overlay:hover {
+        color: var(--white);
+        background: rgba(255, 107, 53, 0.08);
+        padding-left: 1rem;
+      }
+
+      .overlay-nav-list .nav-link-overlay:hover i {
+        opacity: 1;
+      }
+
+      .overlay-nav-list .nav-link-overlay.active {
+        color: var(--white);
+        background: rgba(255, 107, 53, 0.12);
+      }
+
+      .overlay-nav-list .nav-link-overlay.active i {
+        opacity: 1;
+      }
+
+      /* Overlay login button */
+      .overlay-login-wrap {
+        margin-top: 2.5rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .btn-login-overlay {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: var(--orange);
+        color: var(--white);
+        font-weight: 600;
+        font-size: 1rem;
+        padding: 0.8rem 2.5rem;
+        border-radius: 50px;
+        border: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 20px var(--orange-glow);
+        text-decoration: none;
+        letter-spacing: 0.3px;
+      }
+
+      .btn-login-overlay:hover {
+        background: var(--orange-dark);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 8px 35px var(--orange-glow);
+        color: var(--white);
+      }
+
+      /* Overlay footer text */
+      .overlay-footer {
+        margin-top: auto;
+        padding-top: 2rem;
+        color: rgba(255, 255, 255, 0.2);
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+      }
+
+      /* ===== RESPONSIVE TWEAKS ===== */
+
+      /* Hide desktop nav on mobile, hide hamburger on desktop */
+      @media (max-width: 991.98px) {
+        .desktop-nav {
+          display: none !important;
+        }
+        .desktop-login {
+          display: none !important;
+        }
+        .hamburger-wrap {
+          display: flex !important;
+        }
+      }
+
+      @media (min-width: 992px) {
+        .hamburger-wrap {
+          display: none !important;
+        }
+        .desktop-nav {
+          display: flex !important;
+        }
+        .desktop-login {
+          display: block !important;
+        }
+        .custom-navbar {
+          padding: 0.5rem 2.5rem;
+        }
+        .navbar-nav {
+          gap: 0.25rem;
+        }
+      }
+
+      /* Small screen overlay inner padding */
+      @media (max-width: 480px) {
+        .nav-overlay-inner {
+          padding: 1.5rem 1.5rem;
+          max-width: 100%;
+        }
+        .overlay-nav-list .nav-link-overlay {
+          font-size: 1.1rem;
+          padding: 0.6rem 0.3rem;
+        }
+        .overlay-logo .brand-text {
+          font-size: 1.1rem;
+        }
+        .btn-login-overlay {
+          padding: 0.7rem 2rem;
+          font-size: 0.9rem;
+        }
+        .logo-img {
+          height: 55px;
+        }
+        .custom-navbar .navbar-brand .brand-text {
+          font-size: 1.1rem;
+        }
+      }
+
+      /* ===== AOS OVERRIDES ===== */
+      [data-aos] {
+        pointer-events: none;
+      }
+      [data-aos].aos-animate {
+        pointer-events: auto;
+      }
+
+      /* ===== SCROLLBAR ===== */
+      .nav-overlay::-webkit-scrollbar {
+        width: 4px;
+      }
+      .nav-overlay::-webkit-scrollbar-track {
+        background: var(--navy-dark);
+      }
+      .nav-overlay::-webkit-scrollbar-thumb {
+        background: var(--orange);
+        border-radius: 10px;
+      }
+
+      /* ===== UTILITY ===== */
+      .text-orange {
+        color: var(--orange) !important;
+      }
+      .bg-navy {
+        background: var(--navy) !important;
+      }
+      .border-orange {
+        border-color: var(--orange) !important;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ============================================================ -->
+    <!-- ===== NAVBAR ===== -->
+    <!-- ============================================================ -->
+    <nav
+      class="custom-navbar"
+      id="mainNavbar"
+      data-aos="fade-down"
+      data-aos-duration="800"
+      data-aos-easing="ease-out"
+    >
+      <div
+        class="container-fluid px-0 d-flex align-items-center justify-content-between"
+      >
+        <!-- ----- BRAND / LOGO ----- -->
+        <a class="navbar-brand" href="index.html">
+          <!-- ===== LOGO IMAGE ===== -->
+          <img
+            class="logo-img"
+            src="./assets/logo.webp"
+            alt="Brand Logo"
+            id="brandLogo"
+          />
+          <!-- <span class="brand-text d-none d-sm-inline">
+            Travel<span>Hub</span>
+          </span> -->
+        </a>
+
+        <!-- ----- DESKTOP NAV LINKS ----- -->
+        <div class="desktop-nav align-items-center">
+          <ul class="navbar-nav flex-row">
+            <li class="nav-item">
+              <a class="nav-link active" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="destination.html">Destinations</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about.html">About Us</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="blog.html">Blogs</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contact.html">Contact</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- ----- DESKTOP LOGIN BUTTON ----- -->
+        <div class="desktop-login">
+          <a href="login.html" class="btn btn-login">
+            <i class="fas fa-user"></i> Login
+          </a>
+        </div>
+
+        <!-- ----- HAMBURGER TOGGLE (mobile) ----- -->
+        <div class="hamburger-wrap align-items-center">
+          <button
+            class="custom-toggler"
+            id="hamburgerToggle"
+            aria-label="Toggle navigation"
+          >
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- ===== FULL-SCREEN OVERLAY MENU ===== -->
+    <!-- ============================================================ -->
+    <div class="nav-overlay" id="navOverlay">
+      <div class="nav-overlay-inner">
+        <!-- Close button -->
+        <button class="overlay-close-btn" id="overlayCloseBtn">
+          <i class="fas fa-times"></i>
+        </button>
+
+        <!-- Overlay Logo -->
+        <div class="overlay-logo">
+          <img
+            class="logo-img-sm"
+            src="https://via.placeholder.com/100x38/1B2A4A/FFFFFF?text=LOGO"
+            alt="Brand Logo"
+          />
+          <span class="brand-text">Travel<span>Hub</span></span>
+        </div>
+
+        <!-- Overlay Nav Links — LEFT ALIGNED -->
+        <ul class="overlay-nav-list">
+          <li>
+            <a class="nav-link-overlay active" href="index.html">
+              <i class="fas fa-home"></i> Home
+            </a>
+          </li>
+          <li>
+            <a class="nav-link-overlay" href="destination.html">
+              <i class="fas fa-map-marked-alt"></i> Destinations
+            </a>
+          </li>
+          <li>
+            <a class="nav-link-overlay" href="about.html">
+              <i class="fas fa-info-circle"></i> About Us
+            </a>
+          </li>
+          <li>
+            <a class="nav-link-overlay" href="blog.html">
+              <i class="fas fa-blog"></i> Blogs
+            </a>
+          </li>
+          <li>
+            <a class="nav-link-overlay" href="contact.html">
+              <i class="fas fa-envelope"></i> Contact
+            </a>
+          </li>
+        </ul>
+
+        <!-- Overlay Login Button -->
+        <div class="overlay-login-wrap">
+          <a href="login.html" class="btn-login-overlay">
+            <i class="fas fa-user"></i> Login
+          </a>
+        </div>
+
+        <!-- Footer -->
+        <div class="overlay-footer">
+          &copy; 2026 TravelHub &mdash; All rights reserved.
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- ===== SPACER (so content doesn't hide behind fixed navbar) ===== -->
+    <!-- ============================================================ -->
+    <div style="height: 80px"></div>
+
+    <!-- ============================================================ -->
+    <!-- ===== DEMO CONTENT (to show scroll & AOS) ===== -->
+    <!-- ============================================================ -->
+    <section class="container py-5" style="max-width: 900px">
+      <div class="text-center mb-5" data-aos="fade-up" data-aos-duration="600">
+        <h1 class="display-4 fw-bold" style="color: var(--navy)">
+          Welcome to <span style="color: var(--orange)">TravelHub</span>
+        </h1>
+        <p class="lead text-muted">Discover your next adventure with us.</p>
+        <div class="mt-3 d-flex justify-content-center gap-3 flex-wrap">
+          <span
+            class="badge bg-navy text-white px-4 py-2 rounded-pill"
+            style="border: 1px solid var(--orange)"
+            >🌍 Explore</span
+          >
+          <span
+            class="badge bg-navy text-white px-4 py-2 rounded-pill"
+            style="border: 1px solid var(--orange)"
+            >✈️ Flights</span
+          >
+          <span
+            class="badge bg-navy text-white px-4 py-2 rounded-pill"
+            style="border: 1px solid var(--orange)"
+            >🏨 Hotels</span
+          >
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+          <div
+            class="card h-100 shadow-sm border-0"
+            style="border-top: 4px solid var(--orange) !important"
+          >
+            <div class="card-body text-center">
+              <div class="display-4 mb-3" style="color: var(--orange)">🏝️</div>
+              <h5 class="card-title fw-bold" style="color: var(--navy)">
+                Exotic Destinations
+              </h5>
+              <p class="card-text text-muted small">
+                Discover hidden gems across the globe.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+          <div
+            class="card h-100 shadow-sm border-0"
+            style="border-top: 4px solid var(--orange) !important"
+          >
+            <div class="card-body text-center">
+              <div class="display-4 mb-3" style="color: var(--orange)">🧳</div>
+              <h5 class="card-title fw-bold" style="color: var(--navy)">
+                Curated Trips
+              </h5>
+              <p class="card-text text-muted small">
+                Handpicked itineraries for every traveler.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+          <div
+            class="card h-100 shadow-sm border-0"
+            style="border-top: 4px solid var(--orange) !important"
+          >
+            <div class="card-body text-center">
+              <div class="display-4 mb-3" style="color: var(--orange)">🌟</div>
+              <h5 class="card-title fw-bold" style="color: var(--navy)">
+                5-Star Service
+              </h5>
+              <p class="card-text text-muted small">
+                Premium support from start to finish.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="mt-5 p-4 rounded-4"
+        style="background: var(--navy); color: var(--white)"
+        data-aos="fade-up"
+        data-aos-delay="400"
+      >
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <h4 class="fw-bold mb-2">Ready to explore?</h4>
+            <p class="mb-0 opacity-75">
+              Join thousands of happy travelers who trust TravelHub.
+            </p>
+          </div>
+          <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <a
+              href="#"
+              class="btn btn-login"
+              style="
+                background: var(--orange);
+                color: #fff;
+                padding: 0.6rem 2rem;
+                border-radius: 50px;
+                text-decoration: none;
+                font-weight: 600;
+                display: inline-block;
+              "
+            >
+              Get Started <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Extra spacer for scrolling -->
+      <div style="height: 60vh"></div>
+
+      <div class="text-center text-muted small py-4 border-top">
+        Scroll down to see AOS animations &amp; fixed navbar behavior.
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- ===== SCRIPTS ===== -->
+    <!-- ============================================================ -->
+
+    <!-- ===== BOOTSTRAP 5 CDN (JS) ===== -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- ===== GSAP CDN ===== -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <!-- ===== AOS CDN ===== -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- ===== CUSTOM JAVASCRIPT ===== -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // =============================================================
+        // 1.  INITIALIZE AOS
+        // =============================================================
+        AOS.init({
+          once: false,
+          mirror: true,
+          duration: 700,
+          easing: "ease-out-cubic",
+        });
+
+        // =============================================================
+        // 2.  DOM REFS
+        // =============================================================
+        const hamburger = document.getElementById("hamburgerToggle");
+        const overlay = document.getElementById("navOverlay");
+        const closeBtn = document.getElementById("overlayCloseBtn");
+        const overlayLinks = document.querySelectorAll(".nav-link-overlay");
+        const body = document.body;
+
+        // =============================================================
+        // 3.  GSAP TIMELINE (reusable)
+        // =============================================================
+        let menuTl = null;
+
+        function animateMenuOpen() {
+          if (menuTl) menuTl.kill();
+          menuTl = gsap.timeline({
+            defaults: { ease: "power3.out", duration: 0.5 },
+          });
+
+          // Overlay fades in
+          menuTl.to(
+            overlay,
+            {
+              opacity: 1,
+              visibility: "visible",
+              duration: 0.3,
+              ease: "power2.out",
+            },
+            0,
+          );
+
+          // Inner panel slides in from left
+          menuTl.to(
+            ".nav-overlay-inner",
+            {
+              x: "0%",
+              duration: 0.6,
+              ease: "power3.out",
+            },
+            0.05,
+          );
+
+          // Stagger links (GSAP handles them, but we also have CSS transitions as fallback)
+          menuTl.fromTo(
+            ".overlay-nav-list li",
+            {
+              opacity: 0,
+              x: -30,
+            },
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.4,
+              stagger: 0.07,
+              ease: "power2.out",
+            },
+            0.15,
+          );
+
+          // Login button fade-up
+          menuTl.fromTo(
+            ".overlay-login-wrap",
+            {
+              opacity: 0,
+              y: 20,
+            },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.4,
+              ease: "power2.out",
+            },
+            0.35,
+          );
+
+          // Footer fade
+          menuTl.fromTo(
+            ".overlay-footer",
+            {
+              opacity: 0,
+            },
+            {
+              opacity: 1,
+              duration: 0.3,
+              ease: "power1.out",
+            },
+            0.45,
+          );
+
+          return menuTl;
+        }
+
+        function animateMenuClose() {
+          if (menuTl) menuTl.kill();
+          menuTl = gsap.timeline({
+            defaults: { ease: "power3.in", duration: 0.35 },
+          });
+
+          // Inner panel slides out
+          menuTl.to(
+            ".nav-overlay-inner",
+            {
+              x: "-100%",
+              duration: 0.4,
+              ease: "power3.in",
+            },
+            0,
+          );
+
+          // Overlay fades out
+          menuTl.to(
+            overlay,
+            {
+              opacity: 0,
+              visibility: "hidden",
+              duration: 0.25,
+              ease: "power2.in",
+            },
+            0.2,
+          );
+
+          return menuTl;
+        }
+
+        // =============================================================
+        // 4.  OPEN / CLOSE FUNCTIONS
+        // =============================================================
+        function openMenu() {
+          if (overlay.classList.contains("open")) return;
+          overlay.classList.add("open");
+          hamburger.classList.add("active");
+          body.style.overflow = "hidden";
+          animateMenuOpen();
+        }
+
+        function closeMenu() {
+          if (!overlay.classList.contains("open")) return;
+          // First animate out
+          animateMenuClose().then(() => {
+            overlay.classList.remove("open");
+            hamburger.classList.remove("active");
+            body.style.overflow = "";
+          });
+          // Fallback: remove classes after animation
+          setTimeout(() => {
+            overlay.classList.remove("open");
+            hamburger.classList.remove("active");
+            body.style.overflow = "";
+          }, 500);
+        }
+
+        // =============================================================
+        // 5.  EVENT LISTENERS
+        // =============================================================
+
+        // Toggle hamburger
+        hamburger.addEventListener("click", function (e) {
+          e.stopPropagation();
+          if (overlay.classList.contains("open")) {
+            closeMenu();
+          } else {
+            openMenu();
+          }
+        });
+
+        // Close button
+        closeBtn.addEventListener("click", closeMenu);
+
+        // Click on overlay background (outside inner panel) to close
+        overlay.addEventListener("click", function (e) {
+          if (e.target === overlay) {
+            closeMenu();
+          }
+        });
+
+        // Close on Escape key
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && overlay.classList.contains("open")) {
+            closeMenu();
+          }
+        });
+
+        // Close when a nav link is clicked (navigation)
+        overlayLinks.forEach(function (link) {
+          link.addEventListener("click", function (e) {
+            // Allow the link to navigate, but close the menu first
+            const href = link.getAttribute("href");
+            if (href && !href.startsWith("#")) {
+              e.preventDefault();
+              closeMenu();
+              // Navigate after close animation
+              setTimeout(function () {
+                window.location.href = href;
+              }, 450);
+            } else {
+              closeMenu();
+            }
+          });
+        });
+
+        // =============================================================
+        // 6.  ACTIVE LINK HIGHLIGHT
+        // =============================================================
+        const currentPath =
+          window.location.pathname.split("/").pop() || "index.html";
+
+        document
+          .querySelectorAll(".nav-link, .nav-link-overlay")
+          .forEach(function (el) {
+            const href = el.getAttribute("href");
+            if (href === currentPath) {
+              el.classList.add("active");
+            } else if (currentPath === "" && href === "index.html") {
+              el.classList.add("active");
+            }
+            // Remove active from others if needed (Bootstrap handles this)
+          });
+
+        // =============================================================
+        // 7.  GSAP NAVBAR SCROLL EFFECT (subtle)
+        // =============================================================
+        const navbar = document.getElementById("mainNavbar");
+        let lastScroll = 0;
+
+        window.addEventListener("scroll", function () {
+          const currentScroll =
+            window.pageYOffset || document.documentElement.scrollTop;
+          if (currentScroll > 80) {
+            navbar.style.boxShadow = "0 8px 40px rgba(27,42,74,0.4)";
+            navbar.style.padding = "0.4rem 1.5rem";
+          } else {
+            navbar.style.boxShadow = "0 4px 30px rgba(27,42,74,0.3)";
+            navbar.style.padding = "0.75rem 1.5rem";
+          }
+          if (currentScroll > 120) {
+            navbar.style.background = "rgba(27,42,74,0.94)";
+            navbar.style.backdropFilter = "blur(12px)";
+          } else {
+            navbar.style.background = "var(--navy)";
+            navbar.style.backdropFilter = "none";
+          }
+          lastScroll = currentScroll;
+        });
+
+        // =============================================================
+        // 8.  LOGO IMAGE FALLBACK (if src fails, show text)
+        // =============================================================
+        const logoImg = document.getElementById("brandLogo");
+        logoImg.addEventListener("error", function () {
+          this.style.display = "none";
+          const parent = this.closest(".navbar-brand");
+          if (parent) {
+            const fallback = document.createElement("span");
+            fallback.className = "fw-bold fs-4";
+            fallback.style.color = "var(--orange)";
+            fallback.textContent = "TH";
+            parent.prepend(fallback);
+          }
+        });
+
+        // Small logo fallback
+        const logoImgSm = document.querySelector(".logo-img-sm");
+        if (logoImgSm) {
+          logoImgSm.addEventListener("error", function () {
+            this.style.display = "none";
+          });
+        }
+
+        console.log(
+          "✅ Navbar initialized with Tailwind + Bootstrap + GSAP + AOS",
+        );
+        console.log("🎨 Color palette: Navy #1B2A4A | Orange #FF6B35");
+        console.log(
+          "📱 Mobile-first | Full-screen overlay with left-aligned content",
+        );
+      });
+    </script>
+  </body>
+</html>
